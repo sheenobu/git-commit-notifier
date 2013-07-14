@@ -252,8 +252,8 @@ class GitCommitNotifier::Git
       if git_path.empty?
         git_path = git_dir
       end
-      name_with_parent = File.expand_path(git_path).scan(/[a-zA-z0-9]+\/[a-zA-Z0-9]+.git$/).first;
-      return name_with_parent.sub(/\.git$/, '') unless name_with_parent.empty?
+      name_with_parent = File.expand_path(git_path).scan(/[a-zA-z0-9\-]+\/[a-zA-Z0-9\-]+.git$/).first;
+      return name_with_parent.sub(/\.git$/, '')  unless name_with_parent.empty?
       File.expand_path(git_path).split("/").last.sub(/\.git$/, '')
     end
 
