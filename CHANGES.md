@@ -2,6 +2,17 @@
 
 ## Not yet released
 
+## Version 0.12.1
+
+* The regular expression adjusted to include the underscore in repo name.
+* More HTML commit messages appearance improvements.
+* Fix the issue of notifications for all commits being sent out when a
+  new branch is pushed with unique_commits_per_branch set to false.
+* gitlabhq also supports the character "-" within repository names.
+* Fixing broken links of renamed files in case of gitweb and other interfaces.
+* Do not list commit to closest annotated tag until configuration option set.
+* Show shortlog from previous tag on tag creation.
+
 ## Version 0.12.0
 
 * Detects renamed files.
