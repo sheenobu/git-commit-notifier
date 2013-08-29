@@ -749,17 +749,16 @@ module GitCommitNotifier
         # The flag unique_to_current_branch passed to new_commits means the
         # opposite: "consider only commits that are unique to this branch"
 
- 	# Note :: In case of creation of a new branch, the oldrev passed by git 
- 	# to the post-receive hook is 00000... which causes the git commit notifier 
- 	# to send out notifications for ALL commits in the repository. Hence we force 
- 	# the "unique_commits_per_branch" config to "true" in such cases, and in other 
- 	# cases, we consider the value from the config file
-         if oldrev =~ /^0+$/
-                 Git.new_commits(oldrev, newrev, ref_name, true)
-         else
-                 Git.new_commits(oldrev, newrev, ref_name, !unique_commits_per_branch?)
-         end
-
+       	# Note :: In case of creation of a new branch, the oldrev passed by git 
+       	# to the post-receive hook is 00000... which causes the git commit notifier 
+       	# to send out notifications for ALL commits in the repository. Hence we force 
+       	# the "unique_commits_per_branch" config to "true" in such cases, and in other 
+       	# cases, we consider the value from the config file
+        if oldrev =~ /^0+$/
+          Git.new_commits(oldrev, newrev, ref_name, true)
+        else
+          Git.new_commits(oldrev, newrev, ref_name, !unique_commits_per_branch?)
+        end
       end
 
       # Add each diff to @result
