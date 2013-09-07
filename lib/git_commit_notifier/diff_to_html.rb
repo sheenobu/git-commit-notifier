@@ -535,7 +535,13 @@ module GitCommitNotifier
       :gitorious => lambda { |config, commit| "<a href='#{config['gitorious']['path']}/#{config['gitorious']['project']}/#{config['gitorious']['repository']}/commit/#{commit}'>#{commit}</a>" },
       :trac      => lambda { |config, commit| "<a href='#{config['trac']['path']}/#{commit}'>#{commit}</a>" },
       :cgit      => lambda { |config, commit| "<a href='#{config['cgit']['path']}/#{config['cgit']['project'] || "#{Git.repo_name_real}"}/commit/?id=#{commit}'>#{commit}</a>" },
-      :gitlabhq  => lambda { |config, commit| "<a href='#{config['gitlabhq']['path']}/#{Git.repo_name.gsub(".", "_")}/commits/#{commit}'>#{commit}</a>" },
+      :gitlabhq  => lambda { |config, commit|
+        if config['gitlabhq']['version'] >= 4.0
+          "<a href='#{config['gitlabhq']['path']}/#{Git.repo_name_with_parent.gsub(".", "_")}/commits/#{commit}'>#{commit}</a>"
+        else
+          "<a href='#{config['gitlabhq']['path']}/#{Git.repo_name.gsub(".", "_")}/commits/#{commit}'>#{commit}</a>"
+        end
+      },
       :gitalist  => lambda { |config, commit| "<a href='#{config['gitalist']['path']}/projects/#{config['gitalist']['project'] || Git.repo_name}/#{commit}/log'>#{commit}</a>" },
       :redmine   => lambda { |config, commit| "<a href='#{config['redmine']['path']}/projects/#{config['redmine']['project'] || Git.repo_name}/repository/revisions/#{commit}'>#{commit}</a>" },
       :github    => lambda { |config, commit| "<a href='#{config['github']['path']}/#{config['github']['project']}/#{Git.repo_name}/commit/#{commit}'>#{commit}</a>" },
