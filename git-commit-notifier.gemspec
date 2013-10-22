@@ -11,7 +11,8 @@ Gem::Specification.new do |s|
   s.email = %q{bodo@bitboxer.de}
   s.extra_rdoc_files = [
     "LICENSE",
-    "README.md"
+    "README.md",
+    "CHANGES.md"
   ]
 
   s.files            = `git ls-files`.split("\n")
@@ -31,12 +32,12 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency(%q<nokogiri>, ["~> 1.4", "< 1.6.0"])
   s.add_runtime_dependency(%q<yajl-ruby>, ["~> 1.0"])
   s.add_development_dependency(%q<rake>, ["~> 0.8", "!= 0.9.0"])
-  s.add_development_dependency(%q<bundler>, ["~> 1.0", ">=1.0.10"])
+  s.add_development_dependency(%q<bundler>, ["~> 1.3"])
   s.add_development_dependency(%q<code-cleaner>, [">= 0"])
   s.add_development_dependency(%q<rspec-core>, [">= 0"])
   s.add_development_dependency(%q<rspec-expectations>, [">= 0"])
   s.add_development_dependency(%q<rr>, ["~> 1.0"])
   s.add_development_dependency(%q<faker>, ["~> 1.1.2"])
   s.add_development_dependency(%q<yard>, ["~> 0.8.1"])
-  s.add_development_dependency(%q<redcarpet>, ["~> 2.1"])
+  s.add_development_dependency(%q<redcarpet>, ["~> 3.0"])
 end
