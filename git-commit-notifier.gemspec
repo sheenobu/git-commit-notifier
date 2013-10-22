@@ -40,4 +40,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency(%q<faker>, ["~> 1.1.2"])
   s.add_development_dependency(%q<yard>, ["~> 0.8.1"])
   s.add_development_dependency(%q<redcarpet>, ["~> 3.0"])
+  s.add_development_dependency(%q<yard-redcarpet-ext>, ["~> 0.0.3"])
 end

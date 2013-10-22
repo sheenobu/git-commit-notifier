@@ -2,6 +2,15 @@
 
 ## Not yet released
 
+## Version 0.12.2
+
+* Restrict `nokogiri` gem version to be lower than 1.6.0 to allow Ruby 1.8.7 installations.
+* Introduce a new option: `reply_to_mailinglist`. This option is mutually
+exclusive to `reply_to_author`. It gives us the ability to set the
+`Reply-To` adddress to the either the recipient/mailinglist.
+* More opaque diffs.
+* Minor updates.
+
 ## Version 0.12.1
 
 * The regular expression adjusted to include the underscore in repo name.
