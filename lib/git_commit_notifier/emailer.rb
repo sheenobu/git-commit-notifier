@@ -181,7 +181,7 @@ class GitCommitNotifier::Emailer
     to_tag = config['delivery_method'] == 'nntp' ? 'Newsgroups' : 'To'
     quoted_from_alias = !@from_alias.nil? ? quote_if_necessary("#{@from_alias}",'utf-8') : nil
     from = (@from_alias.nil? || @from_alias.empty?) ? @from_address : "#{quoted_from_alias} <#{@from_address}>"
-    reply_to = (@from_alias.nil? || !config['reply_to_author']) ? @reply_to_address : "#{@from_alias} <#{@reply_to_address}>"
+    reply_to = (@from_alias.nil? || @from_alias.empty? || config['reply_to_author'] || config['reply_to_mailinglist']) ? @reply_to_address : "#{quoted_from_alias} <#{@reply_to_address}>"
 
     plaintext = if config['add_plaintext'].nil? || config['add_plaintext']
       @text_message
