@@ -52,6 +52,16 @@ module GitCommitNotifier
         end
       end
 
+      def get_reply_to_address(config, committer_email)
+        reply_to_address = config["from"]
+        if config["reply_to_author"]
+          reply_to_address = committer_email
+        elsif config["reply_to_mailinglist"]
+          reply_to_address = recipient
+        end
+        reply_to_address
+      end
+
       # Gets list of branches from {config} to include into notifications.
       # @note All branches will be notified about if returned list is nil; otherwise only specified branches will be notifified about.
       # @return [Array(String), NilClass] Array of branches to include into notifications or nil.
@@ -137,15 +147,6 @@ module GitCommitNotifier
           return
         end
 
-        reply_to_address = nil
-        if config["reply_to_author"]
-          reply_to_address ||= result[:commit_info][:email]
-        elsif config["reply_to_mailinglist"]
-          reply_to_address ||= recipient
-        else
-          reply_to_address ||= config["from"]
-        end
-
         # Debug information
         logger.debug('----')
         logger.debug("cwd: #{Dir.pwd}")
@@ -226,7 +227,7 @@ module GitCommitNotifier
             :recipient => config["send_mail_to_committer"] ? add_committer_to_recipient(recipient, result[:commit_info][:email]) : recipient,
             :from_address => config["from"] || result[:commit_info][:email],
             :from_alias => result[:commit_info][:author],
-            :reply_to_address => reply_to_address,
+            :reply_to_address => get_reply_to_address(config, result[:commit_info][:email]),
             :subject => subject,
             :commit_date => result[:commit_info][:date],
             :current_date => Time.new.rfc2822,
@@ -277,7 +278,7 @@ module GitCommitNotifier
               :recipient => config["send_mail_to_committer"] ? add_committer_to_recipient(recipient, result[:commit_info][:email]) : recipient,
               :from_address => config["from"] || result[:commit_info][:email],
               :from_alias => result[:commit_info][:author],
-              :reply_to_address => reply_to_address,
+              :reply_to_address => get_reply_to_address(config, result[:commit_info][:email]),
               :subject => subject,
               :commit_date => result[:commit_info][:date],
               :current_date => Time.new.rfc2822,
