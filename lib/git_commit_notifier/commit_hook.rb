@@ -87,6 +87,18 @@ module GitCommitNotifier
         end
       end
 
+      def resolve_reply_to_address(config, result)
+        reply_to_address = nil
+        if config["reply_to_author"]
+          reply_to_address ||= result[:commit_info][:email]
+        elsif config["reply_to_mailinglist"]
+          reply_to_address ||= recipient
+        else
+          reply_to_address ||= config["from"]
+        end
+        reply_to_address
+      end
+
       # Runs comit hook handler using specified arguments.
       # @param [String] config_name Path to the application configuration file in YAML format.
       # @param [String] rev1 First specified revision.
@@ -135,15 +147,6 @@ module GitCommitNotifier
         if recipient.nil? || recipient.length == 0
           info("bypassing commit notification; no recipients specified (consider setting git config hooks.mailinglist)")
           return
-        end
-
-        reply_to_address = nil
-        if config["reply_to_author"]
-          reply_to_address ||= result[:commit_info][:email]
-        elsif config["reply_to_mailinglist"]
-          reply_to_address ||= recipient
-        else
-          reply_to_address ||= config["from"]
         end
 
         # Debug information
@@ -226,7 +229,7 @@ module GitCommitNotifier
             :recipient => config["send_mail_to_committer"] ? add_committer_to_recipient(recipient, result[:commit_info][:email]) : recipient,
             :from_address => config["from"] || result[:commit_info][:email],
             :from_alias => result[:commit_info][:author],
-            :reply_to_address => reply_to_address,
+            :reply_to_address => resolve_reply_to_address(config, result),
             :subject => subject,
             :commit_date => result[:commit_info][:date],
             :current_date => Time.new.rfc2822,
@@ -277,7 +280,7 @@ module GitCommitNotifier
               :recipient => config["send_mail_to_committer"] ? add_committer_to_recipient(recipient, result[:commit_info][:email]) : recipient,
               :from_address => config["from"] || result[:commit_info][:email],
               :from_alias => result[:commit_info][:author],
-              :reply_to_address => reply_to_address,
+              :reply_to_address => resolve_reply_to_address(config, result),
               :subject => subject,
               :commit_date => result[:commit_info][:date],
               :current_date => Time.new.rfc2822,
