@@ -73,7 +73,6 @@ class GitCommitNotifier::Git
     # @param [String] rev2 Second revision
     def changed_files(rev1, rev2)
       lines = lines_from_shell("git log #{rev1}..#{rev2} --name-status --pretty=oneline -M#{GitCommitNotifier::CommitHook.config['similarity_detection_threshold'] || "0.5"}")
-      lines.map! { |line|  }
       lines = lines.select { |line| line =~ /^\w{1}\s+\w+/ } # grep out only filenames
       lines.uniq
     end
