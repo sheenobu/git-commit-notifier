@@ -2,7 +2,7 @@
 
 ## Not yet released
 
-## Version 0.12.4
+## Version 0.12.5
 
 * Fix behaviour when git output is not utf-8.
 
