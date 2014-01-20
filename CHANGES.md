@@ -2,6 +2,10 @@
 
 ## Not yet released
 
+## Version 0.12.4
+
+* Fix behaviour when git output is not utf-8.
+
 ## Version 0.12.3
 
 * Links updated for Gitlab 5.x
