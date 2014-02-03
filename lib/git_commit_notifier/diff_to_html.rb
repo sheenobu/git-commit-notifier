@@ -58,6 +58,14 @@ module GitCommitNotifier
       end
     end
 
+    def to_utf8_strict(str)
+      return str  unless str.respond_to?(:force_encoding)
+      str = str.force_encoding(Encoding::UTF_8)
+      return str  if str.valid_encoding?
+      str = str.force_encoding(Encoding::BINARY)
+      str.encode("UTF-8", :invalid => :replace, :undef => :replace)
+    end
+
     def range_info(range)
       matches = range.match(/^@@ \-(\S+) \+(\S+)/)
       matches[1..2].map { |m| m.split(',')[0].to_i }
@@ -452,6 +460,10 @@ module GitCommitNotifier
         message.pop
       end
       result[:message] = message
+
+      result.each_key do |key|
+        result[key] = to_utf8_strict result[key]
+      end
 
       result
     end

@@ -5,10 +5,8 @@ class GitCommitNotifier::Git
   class << self
     def to_utf8(str)
       return str  unless str.respond_to?(:force_encoding)
-      str = str.force_encoding(Encoding::UTF_8)
-      return str  if str.valid_encoding?
-      str = str.force_encoding(Encoding::BINARY)
-      str.encode("UTF-8", :invalid => :replace, :undef => :replace)
+      str.force_encoding(Encoding::UTF_8)
+      str
     end
 
     # Runs specified command and gets its output.
