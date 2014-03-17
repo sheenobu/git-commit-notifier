@@ -157,6 +157,8 @@ cgit:
 # instance
 trac:
   path: http://example.com/changeset
+# repository: test.git
+# repository defaults to nil (link to trac's default repository)
 
 # If link_files is set to "gitlabhq", you need to configure the path to your gitlabhq
 # instance
