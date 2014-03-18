@@ -217,7 +217,11 @@ module GitCommitNotifier
         elsif config["link_files"] == "gitorious" && config["gitorious"]
           "<a href='#{config['gitorious']['path']}/#{config['gitorious']['project']}/#{config['gitorious']['repository']}/blobs/#{branch_name}/#{file_name}'>#{file_name}</a>"
         elsif config["link_files"] == "trac" && config["trac"]
-          "<a href='#{config['trac']['path']}/#{@current_commit}/#{file_name}'>#{file_name}</a>"
+          if config["trac"]["repository"]
+            "<a href='#{config['trac']['path']}/#{@current_commit}/#{config['trac']['repository']}/#{file_name}'>#{file_name}</a>"
+          else
+            "<a href='#{config['trac']['path']}/#{@current_commit}/#{file_name}'>#{file_name}</a>"
+          end
         elsif config["link_files"] == "cgit" && config["cgit"]
           "<a href='#{config['cgit']['path']}/#{config['cgit']['project'] || "#{Git.repo_name_real}"}/tree/#{file_name}?h=#{branch_name}'>#{file_name}</a>"
         elsif config["link_files"] == "gitlabhq" && config["gitlabhq"]
@@ -547,7 +551,13 @@ module GitCommitNotifier
     COMMIT_LINK_MAP = {
       :gitweb    => lambda { |config, commit| "<a href='#{config['gitweb']['path']}?p=#{config['gitweb']['project'] || "#{Git.repo_name}.git"};a=commitdiff;h=#{commit}'>#{commit}</a>" },
       :gitorious => lambda { |config, commit| "<a href='#{config['gitorious']['path']}/#{config['gitorious']['project']}/#{config['gitorious']['repository']}/commit/#{commit}'>#{commit}</a>" },
-      :trac      => lambda { |config, commit| "<a href='#{config['trac']['path']}/#{commit}'>#{commit}</a>" },
+      :trac      => lambda { |config, commit|
+        if config['trac']['repository']
+          "<a href='#{config['trac']['path']}/#{commit}/#{config['trac']['repository']}'>#{commit}</a>"
+        else
+          "<a href='#{config['trac']['path']}/#{commit}'>#{commit}</a>"
+        end
+      },
       :cgit      => lambda { |config, commit| "<a href='#{config['cgit']['path']}/#{config['cgit']['project'] || "#{Git.repo_name_real}"}/commit/?id=#{commit}'>#{commit}</a>" },
       :gitlabhq  => lambda { |config, commit|
         if config['gitlabhq']['version'] >= 5.0
