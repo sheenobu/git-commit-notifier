@@ -851,8 +851,10 @@ module GitCommitNotifier
         diff_for_lightweight_tag($1, @rev, change_type)
       when %r!^refs/tags/(.+),tag$!
         # Change to a annotated tag
-        if config["skip_annotated_tag"]
+        if not config["skip_annotated_tag"]
           diff_for_annotated_tag($1, @rev, change_type)
+        else
+          puts "Ignoring #{change_type}"
         end
       when %r!^refs/heads/(.+),commit$!
         # Change on a branch
