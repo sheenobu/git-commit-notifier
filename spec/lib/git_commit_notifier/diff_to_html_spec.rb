@@ -17,6 +17,36 @@ describe GitCommitNotifier::DiffToHtml do
     end
   end
 
+  describe :generate_file_link do
+    it "should generate proper url for stash" do
+      diff = GitCommitNotifier::DiffToHtml.new(
+              "link_files" => "stash",
+              "stash" => {
+                "path" => "http://example.com/projects/TEST",
+                "repository" => "TESTREPO"
+              })
+
+      mock(GitCommitNotifier::Git).rev_type(REVISIONS[1]) { "commit" }
+      mock(GitCommitNotifier::Git).rev_type(REVISIONS[2]) { "commit" }
+      mock(GitCommitNotifier::Git).new_commits(anything, anything, anything, anything) { [REVISIONS[1]] }
+      [REVISIONS[1]].each do |rev|
+        mock(GitCommitNotifier::Git).show(rev, :ignore_whitespace => 'all') { IO.read(FIXTURES_PATH + 'git_show_' + rev) }
+        dont_allow(GitCommitNotifier::Git).describe(rev) { IO.read(FIXTURES_PATH + 'git_describe_' + rev) }
+      end
+
+      diff.diff_between_revisions REVISIONS[1], REVISIONS[2], 'testproject', 'refs/heads/master'
+
+      diff.result.should have(1).commits # one result for each of the commits
+
+      diff.result.each do |html|
+        html.should_not be_include('@@') # diff correctly processed
+      end
+ 
+      expect(diff.generate_file_link("x/file1.html")).to \
+        eq("<a href='http://example.com/projects/TEST/repos/TESTREPO/browse/x/file1.html?at=a4629e707d80a5769f7a71ca6ed9471015e14dc9'>x/file1.html</a>")
+    end
+  end
+
   describe :lines_are_sequential? do
     before(:all) do
       @diff_to_html = GitCommitNotifier::DiffToHtml.new

@@ -212,6 +212,21 @@ module GitCommitNotifier
       # TODO: these filenames, etc, should likely be properly html escaped
       file_link = file_name
       if config['link_files'] && !@file_removed
+        file_link = generate_file_link(file_name)
+      end
+
+      if show_summary?
+        @file_changes << {
+          :file_name => file_name, 
+          :text => "#{op} #{binary}file #{file_name}",
+        }
+      end
+
+      "<a name=\"#{file_name}\"></a><h2>#{op} #{binary}file #{file_link}</h2>\n"
+    end
+
+    def generate_file_link(file_name)
+      if config['link_files'] && !@file_removed
         file_link = if config["link_files"] == "gitweb" && config["gitweb"]
           "<a href='#{config['gitweb']['path']}?p=#{config['gitweb']['project'] || "#{Git.repo_name}.git"};f=#{file_name};h=#{@current_sha};hb=#{@current_commit}'>#{file_name}</a>"
         elsif config["link_files"] == "gitorious" && config["gitorious"]
@@ -222,6 +237,8 @@ module GitCommitNotifier
           else
             "<a href='#{config['trac']['path']}/#{@current_commit}/#{file_name}'>#{file_name}</a>"
           end
+        elsif config["link_files"] == "stash" && config["stash"]
+          "<a href='#{config['stash']['path']}/repos/#{config['stash']['repository']}/browse/#{file_name}?at=#{@current_commit}'>#{file_name}</a>"
         elsif config["link_files"] == "cgit" && config["cgit"]
           "<a href='#{config['cgit']['path']}/#{config['cgit']['project'] || "#{Git.repo_name_real}"}/tree/#{file_name}?h=#{branch_name}'>#{file_name}</a>"
         elsif config["link_files"] == "gitlabhq" && config["gitlabhq"]
@@ -244,15 +261,6 @@ module GitCommitNotifier
           file_name
         end
       end
-
-      if show_summary?
-        @file_changes << {
-          :file_name => file_name, 
-          :text => "#{op} #{binary}file #{file_name}",
-        }
-      end
-
-      "<a name=\"#{file_name}\"></a><h2>#{op} #{binary}file #{file_link}</h2>\n"
     end
 
     # Determines are two lines are sequentially placed in diff (no skipped lines between).
@@ -557,6 +565,9 @@ module GitCommitNotifier
         else
           "<a href='#{config['trac']['path']}/#{commit}'>#{commit}</a>"
         end
+      },
+      :stash     => lambda { |config, commit|
+        "<a href='#{config['stash']['path']}/repos/#{config['stash']['repository']}/commits/#{commit}'>#{commit}</a>"
       },
       :cgit      => lambda { |config, commit| "<a href='#{config['cgit']['path']}/#{config['cgit']['project'] || "#{Git.repo_name_real}"}/commit/?id=#{commit}'>#{commit}</a>" },
       :gitlabhq  => lambda { |config, commit|
