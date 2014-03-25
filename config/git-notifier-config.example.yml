@@ -218,6 +218,9 @@ unique_commits_per_branch: false
 # Skip commits older than N days
 #skip_commits_older_than: 7
 
+# Skip sending emails out for annotated tags
+#skip_annotated_tag: false
+
 show_master_branch_name: false
 
 # ignore whitespace?
